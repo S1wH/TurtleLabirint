@@ -74,6 +74,7 @@ class LabirintTurtle:
                 break
         if pos_x != self.exit[0] or pos_y != self.exit[1]:
             return None
+        return 'OK'
 
 
 lab = LabirintTurtle()
