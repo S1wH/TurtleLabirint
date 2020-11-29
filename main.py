@@ -3,6 +3,7 @@ from termcolor import colored
 
 
 def find_the_way(graph, start, goal):
+    # finding the way out
     explored = []
     queue = [[start]]
     if start == goal:
@@ -30,28 +31,40 @@ class LabirintTurtle:
         self.path = []
 
     def find_edges(self):
-        edges = []
-        for i in range(len(self.map)):
-            for j in range(len(self.map[i])):
+        edges = {}
+        # making graph of all ways
+        for i in range(len(self.map) - 1):
+            for j in range(len(self.map[i]) - 1):
                 if self.map[i][j] != '*':
                     if self.map[i][j + 1] == ' ':
-                        edges.append([str(i) + ',' + str(j), str(i) + ',' + str(j + 1)])
+                        if str(i) + ',' + str(j) not in edges.keys():
+                            edges[str(i) + ',' + str(j)] = [str(i) + ',' + str(j + 1)]
+                        else:
+                            mass = edges[str(i) + ',' + str(j)].copy()
+                            mass.append(str(i) + ',' + str(j + 1))
+                            edges[str(i) + ',' + str(j)] = mass
                     if self.map[i][j - 1] == ' ':
-                        edges.append([str(i) + ',' + str(j), str(i) + ',' + str(j - 1)])
+                        if str(i) + ',' + str(j) not in edges:
+                            edges[str(i) + ',' + str(j)] = [str(i) + ',' + str(j - 1)]
+                        else:
+                            mass = edges[str(i) + ',' + str(j)].copy()
+                            mass.append(str(i) + ',' + str(j - 1))
+                            edges[str(i) + ',' + str(j)] = mass
                     if self.map[i + 1][j] == ' ':
-                        edges.append([str(i) + ',' + str(j), str(i + 1) + ',' + str(j)])
+                        if str(i) + ',' + str(j) not in edges:
+                            edges[str(i) + ',' + str(j)] = [str(i + 1) + ',' + str(j)]
+                        else:
+                            mass = edges[str(i) + ',' + str(j)].copy()
+                            mass.append(str(i + 1) + ',' + str(j))
+                            edges[str(i) + ',' + str(j)] = mass
                     if self.map[i - 1][j] == ' ':
-                        edges.append([str(i) + ',' + str(j), str(i - 1) + ',' + str(j + 1)])
-        graph = defaultdict(list)
-        for edge in edges:
-            first, second = edge[0], edge[1]
-            graph[first].append(second)
-            graph[second].append(first)
-        for value in graph.values():
-            for j in range(len(value) - 1, 0, -1):
-                if value.count(value[j]) > 1:
-                    value.pop(j)
-        return graph
+                        if str(i) + ',' + str(j) not in edges:
+                            edges[str(i) + ',' + str(j)] = [str(i - 1) + ',' + str(j)]
+                        else:
+                            mass = edges[str(i) + ',' + str(j)].copy()
+                            mass.append(str(i - 1) + ',' + str(j))
+                            edges[str(i) + ',' + str(j)] = mass
+        return edges
 
     def load_map(self, file_name):
         file = open(file_name, 'r')
@@ -81,7 +94,9 @@ class LabirintTurtle:
         if turtle is True:
             for i in range(len(self.map)):
                 for j in range(len(self.map[i])):
-                    if self.map[i][j] != chr(128034):
+                    if self.map[i][j] == chr(128062):
+                        print(self.map[i][j], end='\t')
+                    elif self.map[i][j] != chr(128034):
                         print(colored(self.map[i][j], 'green'), end='\t')
                     else:
                         print(self.map[i][j], end='\t')
@@ -91,7 +106,9 @@ class LabirintTurtle:
         else:
             for i in range(len(self.map)):
                 for j in range(len(self.map[i])):
-                    if self.map[i][j] != chr(128034):
+                    if self.map[i][j] == chr(128062):
+                        print(self.map[i][j], end='\t')
+                    elif self.map[i][j] != chr(128034):
                         print(colored(self.map[i][j], 'green'), end='\t')
                     else:
                         print(' ', end='\t')
@@ -104,7 +121,7 @@ class LabirintTurtle:
         # check if there is an exit and if there any other symbols except for * and ' '
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
-                if i == 0 or i == -1 or j == 0 or j == -1:
+                if i == 0 or i == len(self.map) - 1 or j == 0 or j == len(self.map[i]) - 1:
                     if self.map[i][j] == ' ':
                         self.exit.append([i, j])
                 if self.map[i][j] != ' ' and self.map[i][j] != '*' and self.map[i][j] != chr(128034):
@@ -147,4 +164,3 @@ lab.load_map('3.txt')
 lab.show_map(turtle=True)
 lab.exit_count_step()
 lab.exit_show_step()
-lab.show_map()
