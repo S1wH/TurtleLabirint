@@ -89,7 +89,6 @@ class LabirintTurtle:
         try:
             pos_x = int(line)
             pos_y = int(file.readline())
-            self.map[pos_x][pos_y] = chr(128034)
             self.turtle = [pos_x, pos_y]
             result = self.check_map()
             if result is None:
@@ -105,8 +104,8 @@ class LabirintTurtle:
         if turtle is True:
             for i in range(len(self.map)):
                 for j in range(len(self.map[i])):
-                    if self.map[i][j] == chr(128062):
-                        print(self.map[i][j], end='\t')
+                    if i == self.turtle[0] and j == self.turtle[1]:
+                        print(chr(128034), end='\t')
                     elif self.map[i][j] != chr(128034):
                         print(colored(self.map[i][j], 'green'), end='\t')
                     else:
@@ -141,11 +140,11 @@ class LabirintTurtle:
 
         # check if turtle is in a wall
         if self.map[pos_x][pos_y] == '*':
-            print('черепаха ву стене')
+            print('черепаха в стене')
             return None
 
         # check if there is an exit
-        if self.exits is []:
+        if not self.exits:
             print('нет выхода')
             return None
 
@@ -181,7 +180,7 @@ class LabirintTurtle:
             goal = str(way[0]) + ',' + str(way[1])
             path = find_the_way(self.graph, turtle, goal)
             self.paths.append(path)
-        if not self.paths:
+        if self.paths == [None]:
             return None
         return 'OK'
 
@@ -198,6 +197,4 @@ class LabirintTurtle:
 
 lab = LabirintTurtle()
 lab.load_map('3.txt')
-lab.show_map()
-lab.exit_show_step()
 lab.find_the_shortest_way()
