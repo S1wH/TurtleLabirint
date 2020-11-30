@@ -1,5 +1,5 @@
-from collections import defaultdict
 from termcolor import colored
+import random
 
 
 def find_the_way(graph, start, goal):
@@ -25,52 +25,64 @@ def find_the_way(graph, start, goal):
 
 class LabirintTurtle:
     def __init__(self):
+        self.graph = None
         self.map = []
-        self.exit = []
+        self.exits = []
         self.turtle = None
-        self.path = []
+        self.paths = []
 
     def find_edges(self):
         edges = {}
         # making graph of all ways
-        for i in range(len(self.map) - 1):
-            for j in range(len(self.map[i]) - 1):
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
                 if self.map[i][j] != '*':
-                    if self.map[i][j + 1] == ' ':
-                        if str(i) + ',' + str(j) not in edges.keys():
-                            edges[str(i) + ',' + str(j)] = [str(i) + ',' + str(j + 1)]
-                        else:
-                            mass = edges[str(i) + ',' + str(j)].copy()
-                            mass.append(str(i) + ',' + str(j + 1))
-                            edges[str(i) + ',' + str(j)] = mass
-                    if self.map[i][j - 1] == ' ':
-                        if str(i) + ',' + str(j) not in edges:
-                            edges[str(i) + ',' + str(j)] = [str(i) + ',' + str(j - 1)]
-                        else:
-                            mass = edges[str(i) + ',' + str(j)].copy()
-                            mass.append(str(i) + ',' + str(j - 1))
-                            edges[str(i) + ',' + str(j)] = mass
-                    if self.map[i + 1][j] == ' ':
-                        if str(i) + ',' + str(j) not in edges:
-                            edges[str(i) + ',' + str(j)] = [str(i + 1) + ',' + str(j)]
-                        else:
-                            mass = edges[str(i) + ',' + str(j)].copy()
-                            mass.append(str(i + 1) + ',' + str(j))
-                            edges[str(i) + ',' + str(j)] = mass
-                    if self.map[i - 1][j] == ' ':
-                        if str(i) + ',' + str(j) not in edges:
-                            edges[str(i) + ',' + str(j)] = [str(i - 1) + ',' + str(j)]
-                        else:
-                            mass = edges[str(i) + ',' + str(j)].copy()
-                            mass.append(str(i - 1) + ',' + str(j))
-                            edges[str(i) + ',' + str(j)] = mass
-        return edges
+                    pos = str(i) + ',' + str(j)
+                    if i == len(self.map) - 1:
+                        edges[pos] = [str(i - 1) + ',' + str(j)]
+                    elif i == 0:
+                        edges[pos] = [str(i + 1) + ',' + str(j)]
+                    elif j == len(self.map[i]) - 1:
+                        edges[pos] = [str(i) + ',' + str(j - 1)]
+                    elif j == 0:
+                        edges[pos] = [str(i) + ',' + str(j + 1)]
+                    else:
+                        if self.map[i + 1][j] == ' ':
+                            if pos not in edges.keys():
+                                edges[pos] = [str(i + 1) + ',' + str(j)]
+                            else:
+                                mass = edges[pos].copy()
+                                mass.append(str(i + 1) + ',' + str(j))
+                                edges[pos] = mass
+                        if self.map[i - 1][j] == ' ':
+                            if pos not in edges.keys():
+                                edges[pos] = [str(i - 1) + ',' + str(j)]
+                            else:
+                                mass = edges[pos].copy()
+                                mass.append(str(i - 1) + ',' + str(j))
+                                edges[pos] = mass
+                        if self.map[i][j + 1] == ' ':
+                            if pos not in edges.keys():
+                                edges[pos] = [str(i) + ',' + str(j + 1)]
+                            else:
+                                mass = edges[pos].copy()
+                                mass.append(str(i) + ',' + str(j + 1))
+                                edges[pos] = mass
+                        if self.map[i][j - 1] == ' ':
+                            if pos not in edges.keys():
+                                edges[pos] = [str(i) + ',' + str(j - 1)]
+                            else:
+                                mass = edges[pos].copy()
+                                mass.append(str(i) + ',' + str(j - 1))
+                                edges[pos] = mass
+        self.graph = edges
 
     def load_map(self, file_name):
         file = open(file_name, 'r')
         line = file.readline()
+        length = len(line) - 1
         while line.find('*') != -1 or line.find(' ') != - 1:
-            self.map.append(list(line[:-1]))
+            self.map.append(list(line[:-1]) + (length - len(line[:-1])) * [" "])
             line = file.readline()
 
         # check if there are coordinates of turtle and check the map
@@ -81,11 +93,10 @@ class LabirintTurtle:
             self.turtle = [pos_x, pos_y]
             result = self.check_map()
             if result is None:
-                print('Введите название файла')
                 file_name = input()
                 self.load_map(file_name)
         except ValueError:
-            print('Введите название файла')
+            print('Нет данных о месте черепахи')
             file_name = input()
             self.load_map(file_name)
 
@@ -123,33 +134,38 @@ class LabirintTurtle:
             for j in range(len(self.map[i])):
                 if i == 0 or i == len(self.map) - 1 or j == 0 or j == len(self.map[i]) - 1:
                     if self.map[i][j] == ' ':
-                        self.exit.append([i, j])
+                        self.exits.append([i, j])
                 if self.map[i][j] != ' ' and self.map[i][j] != '*' and self.map[i][j] != chr(128034):
+                    print('другие сиволы на карте')
                     return None
 
         # check if turtle is in a wall
         if self.map[pos_x][pos_y] == '*':
+            print('черепаха ву стене')
             return None
 
         # check if there is an exit
-        if self.exit is []:
+        if self.exits is []:
+            print('нет выхода')
             return None
+
         # check if turtle can get to the exit
-        graph = self.find_edges()
-        turtle = str(self.turtle[0]) + ',' + str(self.turtle[1])
-        way = str(self.exit[0][0]) + ',' + str(self.exit[0][1])
-        result = find_the_way(graph, turtle, way)
+        result = self.add_all_paths()
         if not result:
+            print('черепаха не может выбраться')
             return None
-        self.path = result
         return 'OK'
 
     def exit_count_step(self):
-        print(len(self.path))
+        print(len(self.paths[0]))
 
-    def exit_show_step(self):
+    def exit_show_step(self, way=None):
+        if way is None:
+            number = random.randint(0, len(self.exits) - 1)
+        else:
+            number = way
         # make steps
-        for positions in self.path:
+        for positions in self.paths[number]:
             x, y = positions.split(',')
             self.map[int(x)][int(y)] = chr(128062)
         self.show_map()
@@ -158,9 +174,30 @@ class LabirintTurtle:
                 if self.map[i][j] == chr(128062):
                     self.map[i][j] = ' '
 
+    def add_all_paths(self):
+        turtle = str(self.turtle[0]) + ',' + str(self.turtle[1])
+        self.find_edges()
+        for way in self.exits:
+            goal = str(way[0]) + ',' + str(way[1])
+            path = find_the_way(self.graph, turtle, goal)
+            self.paths.append(path)
+        if not self.paths:
+            return None
+        return 'OK'
+
+    def find_the_shortest_way(self):
+        length = len(self.paths[0])
+        way = 0
+        for i in range(len(self.paths)):
+            if len(self.paths[i]) < length:
+                length = len(self.paths[i])
+                way = i
+        print(length)
+        self.exit_show_step(way)
+
 
 lab = LabirintTurtle()
 lab.load_map('3.txt')
-lab.show_map(turtle=True)
-lab.exit_count_step()
+lab.show_map()
 lab.exit_show_step()
+lab.find_the_shortest_way()
