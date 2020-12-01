@@ -30,6 +30,7 @@ class LabirintTurtle:
         self.exits = []
         self.turtle = None
         self.paths = []
+        self.side = 'N'
 
     def find_edges(self):
         edges = {}
@@ -193,6 +194,52 @@ class LabirintTurtle:
                 way = i
         print(length)
         self.exit_show_step(way)
+        self.word_description(way)
+
+    def word_description(self, way):
+        way = self.paths[way]
+        pos_x0, pos_y0 = self.turtle[0], self.turtle[1]
+        for position in way:
+            pos_x, pos_y = position.split(',')
+            pos_x = int(pos_x)
+            pos_y = int(pos_y)
+            if pos_x > pos_x0:
+                if self.side == 'N':
+                    print(colored('Поворот на 180', 'magenta'))
+                elif self.side == 'W':
+                    print(colored('Поворот налево', 'magenta'))
+                elif self.side == 'E':
+                    print(colored('Поворот направо', 'magenta'))
+                print(colored('Вперед', 'magenta'))
+                self.side = 'S'
+            elif pos_x < pos_x0:
+                if self.side == 'S':
+                    print(colored('Поворот на 180', 'magenta'))
+                elif self.side == 'W':
+                    print(colored('Поворот направо', 'magenta'))
+                elif self.side == 'E':
+                    print(colored('Поворот налево', 'magenta'))
+                print(colored('Вперед', 'magenta'))
+                self.side = 'N'
+            elif pos_y > pos_y0:
+                if self.side == 'W':
+                    print(colored('Поворот на 180', 'magenta'))
+                elif self.side == 'N':
+                    print(colored('Поворот направо', 'magenta'))
+                elif self.side == 'S':
+                    print(colored('Поворот налево', 'magenta'))
+                print(colored('Вперед', 'magenta'))
+                self.side = 'E'
+            elif pos_y < pos_y0:
+                if self.side == 'E':
+                    print(colored('Поворот на 180', 'magenta'))
+                elif self.side == 'N':
+                    print(colored('Поворот налево', 'magenta'))
+                elif self.side == 'S':
+                    print(colored('Поворт направо', 'magenta'))
+                print(colored('Вперед', 'magenta'))
+                self.side = 'W'
+            pos_x0, pos_y0 = pos_x, pos_y
 
 
 lab = LabirintTurtle()
