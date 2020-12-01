@@ -197,6 +197,7 @@ class LabirintTurtle:
         self.word_description(way)
 
     def word_description(self, way):
+        # making word description for the shortest way
         way = self.paths[way]
         pos_x0, pos_y0 = self.turtle[0], self.turtle[1]
         for position in way:
