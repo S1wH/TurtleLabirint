@@ -130,6 +130,11 @@ class LabirintTurtle:
         pos_x = self.turtle[0]
         pos_y = self.turtle[1]
 
+        # check if coordinates of turtle are not in lab
+        if pos_x >= len(self.map) or pos_y >= len(self.map[0]):
+            print('Координаты черепашки за пределами лабиринта')
+            return None
+
         # check if there is an exit
         # check if there any other symbols except for * and ' '
         for i in range(len(self.map)):
