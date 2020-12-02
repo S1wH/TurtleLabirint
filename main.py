@@ -200,6 +200,17 @@ class LabirintTurtle:
         self.exit_show_step(way)
         self.word_description(way)
 
+    def find_the_longest_way(self):
+        length = len(self.paths[0])
+        way = 0
+        for i in range(len(self.paths)):
+            if len(self.paths[i]) > length:
+                length = len(self.paths[i])
+                way = i
+        print(length)
+        self.exit_show_step(way)
+        self.word_description(way)
+
     def word_description(self, way):
         # making word description for the shortest way
         way = self.paths[way]
