@@ -83,7 +83,8 @@ class LabirintTurtle:
         line = file.readline()
         length = len(line) - 1
         while line.find('*') != -1 or line.find(' ') != - 1:
-            self.map.append(list(line[:-1]) + (length - len(line[:-1])) * [" "])
+            self.map.append(list(line[:-1]) + (length - len(line[:-1])) *
+                            [" "])
             line = file.readline()
 
         # check if there are coordinates of turtle and check the map
@@ -129,13 +130,16 @@ class LabirintTurtle:
         pos_x = self.turtle[0]
         pos_y = self.turtle[1]
 
-        # check if there is an exit and if there any other symbols except for * and ' '
+        # check if there is an exit
+        # check if there any other symbols except for * and ' '
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
-                if i == 0 or i == len(self.map) - 1 or j == 0 or j == len(self.map[i]) - 1:
+                if i == 0 or i == len(self.map) - 1 or \
+                        j == 0 or j == len(self.map[i]) - 1:
                     if self.map[i][j] == ' ':
                         self.exits.append([i, j])
-                if self.map[i][j] != ' ' and self.map[i][j] != '*' and self.map[i][j] != chr(128034):
+                if self.map[i][j] != ' ' and self.map[i][j] != '*' \
+                        and self.map[i][j] != chr(128034):
                     print('другие сиволы на карте')
                     return None
 
@@ -241,8 +245,3 @@ class LabirintTurtle:
                 print(colored('Вперед', 'magenta'))
                 self.side = 'W'
             pos_x0, pos_y0 = pos_x, pos_y
-
-
-lab = LabirintTurtle()
-lab.load_map('3.txt')
-lab.find_the_shortest_way()
