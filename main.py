@@ -34,7 +34,8 @@ def find_the_way(graph, start, goal):
 
 
 class LabirintTurtle:
-    def __init__(self):
+    def __init__(self, *args):
+        self.useless = args
         self.graph = None
         self.map = []
         self.exits = []
@@ -279,6 +280,6 @@ class LabirintTurtle:
             pos_x0, pos_y0 = pos_x, pos_y
 
 
-lab = LabirintTurtle()
+lab = LabirintTurtle(1)
 lab.load_map('1.txt')
 lab.find_the_shortest_way()
