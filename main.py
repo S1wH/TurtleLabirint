@@ -89,16 +89,15 @@ class LabirintTurtle:
         self.graph = edges
 
     def load_map(self, file_name):
-        file = open(file_name, 'r')
-        line = file.readline()
-        length = len(line) - 1
-        while line.find('*') != -1 or line.find(' ') != - 1:
-            self.map.append(list(line[:-1]) + (length - len(line[:-1])) *
-                            [" "])
-            line = file.readline()
-
         # check if there are coordinates of turtle and check the map
         try:
+            file = open(file_name, 'r')
+            line = file.readline()
+            length = len(line) - 1
+            while line.find('*') != -1 or line.find(' ') != - 1:
+                self.map.append(list(line[:-1]) + (length - len(line[:-1])) *
+                                [" "])
+                line = file.readline()
             pos_x = int(line)
             pos_y = int(file.readline())
             self.turtle = [pos_x, pos_y]
@@ -109,6 +108,11 @@ class LabirintTurtle:
                 self.load_map(file_name)
         except ValueError:
             print('Нет данных о месте черепахи')
+            file_name = input()
+            self.__init__()
+            self.load_map(file_name)
+        except FileNotFoundError:
+            print('Такого файла нет')
             file_name = input()
             self.__init__()
             self.load_map(file_name)
@@ -273,3 +277,8 @@ class LabirintTurtle:
                 print(colored('Вперед', 'magenta'))
                 self.side = 'W'
             pos_x0, pos_y0 = pos_x, pos_y
+
+
+lab = LabirintTurtle()
+lab.load_map('1.txt')
+lab.find_the_shortest_way()
