@@ -95,10 +95,12 @@ class LabirintTurtle:
             result = self.check_map()
             if result is None:
                 file_name = input()
+                self.__init__()
                 self.load_map(file_name)
         except ValueError:
             print('Нет данных о месте черепахи')
             file_name = input()
+            self.__init__()
             self.load_map(file_name)
 
     def show_map(self, turtle=None):
