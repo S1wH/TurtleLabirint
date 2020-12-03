@@ -34,8 +34,9 @@ def find_the_way(graph, start, goal):
 
 
 class LabirintTurtle:
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         self.useless = args
+        self.useless2 = kwargs
         self.graph = None
         self.map = []
         self.exits = []
@@ -89,7 +90,7 @@ class LabirintTurtle:
                                 edges[pos] = mass
         self.graph = edges
 
-    def load_map(self, file_name):
+    def load_map(self, file_name, *args):
         # check if there are coordinates of turtle and check the map
         try:
             file = open(file_name, 'r')
@@ -118,9 +119,9 @@ class LabirintTurtle:
             self.__init__()
             self.load_map(file_name)
 
-    def show_map(self, turtle=None):
+    def show_map(self, turtle=None, *args):
         # if turtle is True
-        if turtle is True:
+        if turtle is not None:
             for i in range(len(self.map)):
                 for j in range(len(self.map[i])):
                     if i == self.turtle[0] and j == self.turtle[1]:
@@ -143,7 +144,7 @@ class LabirintTurtle:
                         print(' ', end='\t')
                 print()
 
-    def check_map(self):
+    def check_map(self, *args):
         pos_x = self.turtle[0]
         pos_y = self.turtle[1]
 
@@ -182,7 +183,7 @@ class LabirintTurtle:
             return None
         return 'OK'
 
-    def exit_count_step(self):
+    def exit_count_step(self, *args):
         print(len(self.paths[0]))
 
     def exit_show_step(self, way=None):
@@ -200,7 +201,7 @@ class LabirintTurtle:
                 if self.map[i][j] == chr(128062):
                     self.map[i][j] = ' '
 
-    def add_all_paths(self):
+    def add_all_paths(self, *args):
         turtle = str(self.turtle[0]) + ',' + str(self.turtle[1])
         self.find_edges()
         for way in self.exits:
@@ -211,7 +212,7 @@ class LabirintTurtle:
             return None
         return 'OK'
 
-    def find_the_shortest_way(self):
+    def find_the_shortest_way(self, *args):
         length = len(self.paths[0])
         way = 0
         for i in range(len(self.paths)):
@@ -222,7 +223,7 @@ class LabirintTurtle:
         self.exit_show_step(way)
         self.word_description(way)
 
-    def find_the_longest_way(self):
+    def find_the_longest_way(self, *args):
         length = len(self.paths[0])
         way = 0
         for i in range(len(self.paths)):
@@ -233,7 +234,7 @@ class LabirintTurtle:
         self.exit_show_step(way)
         self.word_description(way)
 
-    def word_description(self, way):
+    def word_description(self, way, *args):
         # making word description for the shortest way
         way = self.paths[way]
         pos_x0, pos_y0 = self.turtle[0], self.turtle[1]
@@ -280,6 +281,7 @@ class LabirintTurtle:
             pos_x0, pos_y0 = pos_x, pos_y
 
 
-lab = LabirintTurtle(1)
-lab.load_map('1.txt')
-lab.find_the_shortest_way()
+lab = LabirintTurtle()
+lab.load_map('l25.txt')
+lab.exit_count_step()
+lab.show_map()
