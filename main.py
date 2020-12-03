@@ -6,17 +6,27 @@ def find_the_way(graph, start, goal):
     # finding the way out
     explored = []
     queue = [[start]]
+
+    # if turtle is in exit
     if start == goal:
         return []
+
+    # this is a loop to travel through graph with help of queue
     while queue:
         path = queue.pop(0)
         node = path[-1]
+
+        # check if current node is visited or not
         if node not in explored:
             neighbours = graph[node]
+
+            # this loop is to travel through the neighbours of node
             for neighbour in neighbours:
                 new_path = list(path)
                 new_path.append(neighbour)
                 queue.append(new_path)
+
+                # check if the neighbour node is final
                 if neighbour == goal:
                     return new_path
             explored.append(node)
