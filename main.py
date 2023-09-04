@@ -163,7 +163,7 @@ class LabirintTurtle:
                         self.exits.append([i, j])
                 if self.map[i][j] != ' ' and self.map[i][j] != '*' \
                         and self.map[i][j] != chr(128034):
-                    print('другие сиволы на карте')
+                    print('другие символы на карте')
                     return None
 
         # check if turtle is in a wall
